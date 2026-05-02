@@ -1,0 +1,146 @@
+/* ─── Animated Letter Button ────────────────────────────────────────────────── */
+
+.animated-btn {
+  font-weight: 700;
+  font-family: "Nunito", sans-serif;
+  color: white;
+  border-radius: 2rem;
+  cursor: pointer;
+  border: none;
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-glow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.animated-btn:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.animated-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* First row — visible by default, slides UP on hover */
+.animated-btn .span-mother {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  transition: none;
+}
+
+.animated-btn:hover .span-mother span {
+  transform: translateY(-1.2em);
+}
+
+.animated-btn .span-mother span {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Second row — hidden below, slides UP into view on hover */
+.animated-btn .span-mother2 {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.animated-btn .span-mother2 span {
+  display: inline-block;
+  transform: translateY(1.2em);
+  transition: transform 0.3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.animated-btn:hover .span-mother2 span {
+  transform: translateY(0);
+}
+
+/* ─── Liquid Button Effect ──────────────────────────────────────────────────── */
+
+/*
+  Usage: add class "btn-liquid" to any button alongside your existing classes.
+  Example:
+    <button className="btn-liquid bg-gradient-primary text-white ...">Click me</button>
+*/
+
+.btn-liquid {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.4s ease;
+  z-index: 0;
+}
+
+/* The liquid blob */
+.btn-liquid::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -80%;
+  width: 200%;
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 40%;
+  transform: translateX(-50%) rotate(0deg);
+  transition: bottom 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: liquid-spin 6s linear infinite;
+  z-index: -1;
+}
+
+/* Second wave layer for depth */
+.btn-liquid::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -80%;
+  width: 200%;
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 44%;
+  transform: translateX(-50%) rotate(0deg);
+  transition: bottom 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.05s;
+  animation: liquid-spin-reverse 5s linear infinite;
+  z-index: -1;
+}
+
+/* On hover — waves rise up to fill the button */
+.btn-liquid:hover::before {
+  bottom: -20%;
+}
+
+.btn-liquid:hover::after {
+  bottom: -25%;
+}
+
+@keyframes liquid-spin {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to   { transform: translateX(-50%) rotate(360deg); }
+}
+
+@keyframes liquid-spin-reverse {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to   { transform: translateX(-50%) rotate(-360deg); }
+}
+
+/* ─── Variant: dark liquid (for light/outline buttons) ──────────────────────── */
+.btn-liquid-dark::before {
+  background: rgba(99, 102, 241, 0.15);
+}
+.btn-liquid-dark::after {
+  background: rgba(99, 102, 241, 0.10);
+}
