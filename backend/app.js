@@ -18,28 +18,22 @@ const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
+// ─── MANUAL CORS OVERRIDE ─────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
 // ─── Security headers ──────────────────────────────────────────────────────────
 app.use(helmet());
-
-// ─── CORS ──────────────────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:8080')
-  .split(',')
-  .map((o) => o.trim());
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. Postman, curl)
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      callback(new Error(`CORS policy: origin ${origin} is not allowed.`));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
 
 // ─── Rate limiting ─────────────────────────────────────────────────────────────
 const limiter = rateLimit({
