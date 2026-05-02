@@ -8,6 +8,7 @@
  *  4. Handle unhandled rejections / uncaught exceptions gracefully
  */
 
+console.log('🚀 Server script is starting...');
 require('dotenv').config();
 
 const app = require('./app');
