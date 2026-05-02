@@ -26,8 +26,14 @@ export default function Signup() {
     }
     setLoading(true);
     try {
-      await signup(form.name, form.email, form.password, form.role);
-      toast.success("Verification code sent to your email!");
+      const res: any = await signup(form.name, form.email, form.password, form.role);
+      
+      if (res?.data?.devOtp) {
+        toast.info(`Dev mode — OTP: ${res.data.devOtp}`, { duration: 15000 });
+      } else {
+        toast.success("Verification code sent to your email!");
+      }
+      
       // Pass email to the OTP page via state
       navigate("/verify-otp", { state: { email: form.email } });
     } catch (err: unknown) {

@@ -42,12 +42,11 @@ const signup = async (req, res, next) => {
       try {
         await sendOtpEmail(email, name, otp);
       } catch (mailErr) {
-        logger.error(`OTP email failed: ${mailErr.message}`);
+        logger.error(`OTP email failed for ${email}: ${mailErr.message}`);
         // Don't block signup if email fails — return OTP in dev mode
         if (process.env.NODE_ENV === 'development') {
-          logger.warn(`DEV MODE — OTP for ${email}: ${otp}`);
-          return sendSuccess(res, 200, 'OTP sent (check server logs in dev mode).', {
-            devOtp: otp, // only exposed in development
+          return sendSuccess(res, 200, 'OTP generated (dev mode).', {
+            devOtp: otp, 
           });
         }
         return next(new ApiError(500, 'Failed to send verification email. Please try again.'));
@@ -126,7 +125,8 @@ const resendOtp = async (req, res, next) => {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       try {
         await sendOtpEmail(email, user.name, otp);
-      } catch {
+      } catch (mailErr) {
+        logger.error(`Resend OTP email failed for ${email}: ${mailErr.message}`);
         if (process.env.NODE_ENV === 'development') {
           return sendSuccess(res, 200, 'New OTP generated (dev mode).', { devOtp: otp });
         }

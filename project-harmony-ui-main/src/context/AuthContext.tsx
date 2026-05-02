@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = async (name: string, email: string, password: string, role = 'Member') => {
     // Step 1 only — sends OTP. Does NOT log the user in yet.
-    await authApi.signup({ name, email, password, role });
+    return await authApi.signup({ name, email, password, role });
   };
 
   const verifyOtp = async (email: string, otp: string) => {
