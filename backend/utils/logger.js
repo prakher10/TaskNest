@@ -20,18 +20,24 @@ const logger = createLogger({
     new transports.Console({
       format: combine(colorize(), timestamp({ format: 'HH:mm:ss' }), logFormat),
     }),
-    // File transport for errors
-    new transports.File({
-      filename: path.join(__dirname, '../logs/error.log'),
-      level: 'error',
-    }),
-    // File transport for all logs
-    new transports.File({
-      filename: path.join(__dirname, '../logs/combined.log'),
-    }),
   ],
   // Don't crash on unhandled exceptions — let the error handler deal with it
   exitOnError: false,
 });
+
+// Add file transports only if NOT in production or if you want them locally
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
+    new transports.File({
+      filename: path.join(__dirname, '../logs/error.log'),
+      level: 'error',
+    })
+  );
+  logger.add(
+    new transports.File({
+      filename: path.join(__dirname, '../logs/combined.log'),
+    })
+  );
+}
 
 module.exports = logger;
